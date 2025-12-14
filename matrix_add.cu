@@ -66,7 +66,7 @@ __global__ void matrix_add_element(float* d_c, float* d_a, float* d_b, int n) {
 /* Exercise 1.C */
 
 __global__ void matrix_add_row(float* d_c, float* d_a, float* d_b, int n) {
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int row = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (row < n) {
         for (int i = 0; i < n; i++) {
@@ -79,7 +79,7 @@ __global__ void matrix_add_row(float* d_c, float* d_a, float* d_b, int n) {
 /* Exercise 1.D */
 
 __global__ void matrix_add_column(float* d_c, float* d_a, float* d_b, int n) {
-    int column = blockIdx.x * blockDim.x * threadIdx.x;
+    int column = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (column < n) {
         for (int i = 0; i < n; i++) {
@@ -103,23 +103,25 @@ int main() {
     if (c[0] == 3.0f) {
         printf("Exercise 1.B: PASSED\n");
     }
+
     for (int i = 0; i < N * N; i++) {
         c[i] = 0.0f;
     }
-    
+
     matrix_addition(c, a, b, N, 'C');
     if (c[0] == 3.0f) {
         printf("Exercise 1.C: PASSED\n");
     }
+
     for (int i = 0; i < N * N; i++) {
         c[i] = 0.0f;
     }
-    
+
     matrix_addition(c, a, b, N, 'D');
     if (c[0] == 3.0f) {
         printf("Exercise 1.D: PASSED\n");
     }
-    
+
     free(a);
     free(b);
     free(c);
